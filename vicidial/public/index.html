@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vicidial Reports Automation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <!-- SheetJS for parsing Excel/CSV files -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <div class="logo-icon"></div>
+                <h2>ViciReports</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active" data-target="iraq">
+                    <span style="font-size: 1.2rem;">🇮🇶</span>
+                    Iraq Dialer
+                </a>
+                <a href="#" class="nav-item" data-target="ksa">
+                    <span style="font-size: 1.2rem;">🇸🇦</span>
+                    Saudi Dialer
+                </a>
+
+                <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
+                
+                <a href="#" class="nav-item" data-target="outbound">
+                    <span style="font-size: 1.2rem;">📊</span>
+                    Outbound Report
+                </a>
+
+                <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
+                
+                <a href="#" class="nav-item" data-target="options">
+                    <span style="font-size: 1.2rem;">⚙️</span>
+                    More Options
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                <div class="header-titles">
+                    <h1 id="main-title">Iraq Dialer Daily Report</h1>
+                    <p>Upload your daily sheet to automatically generate professional reports.</p>
+                </div>
+                <button class="btn-action export-btn" id="export-btn" style="display: none;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="7 10 12 15 17 10"></polyline>
+                        <line x1="12" y1="15" x2="12" y2="3"></line>
+                    </svg>
+                    Export Report
+                </button>
+            </header>
+
+            <section class="upload-section">
+                <div class="upload-zone" id="drop-zone">
+                    <div class="upload-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                            <polyline points="17 8 12 3 7 8"></polyline>
+                            <line x1="12" y1="3" x2="12" y2="15"></line>
+                        </svg>
+                    </div>
+                    <h3>Drag & Drop your sheet here</h3>
+                    <p>or click to browse from your computer (CSV, XLSX)</p>
+                    <input type="file" id="file-input"
+                        accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel"
+                        hidden>
+                    <button class="upload-btn" onclick="document.getElementById('file-input').click()">Browse
+                        Files</button>
+                </div>
+            </section>
+
+            <!-- Regular Daily Dashboard -->
+            <section class="dashboard-container" id="dashboard" style="display: none;">
+                <!-- Overview Cards -->
+                <div class="overview-section">
+                    <div class="stat-card" style="grid-column: 1 / -1; background: linear-gradient(135deg, rgba(99,102,241,0.1), rgba(16,185,129,0.1)); border-color: rgba(255,255,255,0.1);">
+                        <div class="stat-title">Total Records</div>
+                        <div class="stat-value" id="total-rows" style="font-size: 2.5rem; color: #fff;">0</div>
+                    </div>
+                </div>
+
+                <!-- Network Stats Grid -->
+                <div class="network-stats-grid" id="network-stats">
+                    <!-- Stat cards injected by JS -->
+                </div>
+
+                <!-- Detailed Breakdown -->
+                <div class="details-section" style="grid-template-columns: 1fr;">
+                    <div class="table-container">
+                        <h3>Detailed Status Breakdown</h3>
+                        <table class="status-table" id="status-table">
+                            <thead>
+                                <tr>
+                                    <th>Status Code</th>
+                                    <th>Count</th>
+                                    <th>Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows will be injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Outbound Report Dashboard -->
+            <section class="dashboard-container" id="outbound-dashboard" style="display: none;">
+                <!-- Outbound Overview Cards -->
+                <div class="network-stats-grid" style="grid-template-columns: repeat(4, 1fr);" id="outbound-kpis">
+                    <!-- KPI Cards injected by JS -->
+                </div>
+
+                <!-- Split Tables (Agents & Status, Hangup & List) -->
+                <div class="details-section" style="grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 2rem;">
+                    
+                    <!-- Agent Stats Table -->
+                    <div class="table-container">
+                        <h3>Agent Performance</h3>
+                        <table class="status-table" id="agent-stats-table">
+                            <thead>
+                                <tr>
+                                    <th>Agent</th>
+                                    <th>Calls</th>
+                                    <th>Time</th>
+                                    <th>Avg Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Status Breakdown Table -->
+                    <div class="table-container">
+                        <h3>Status Breakdown</h3>
+                        <table class="status-table" id="outbound-status-table">
+                            <thead>
+                                <tr>
+                                    <th>Status</th>
+                                    <th>Calls</th>
+                                    <th>Avg Time</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Hangup Reasons Table -->
+                    <div class="table-container">
+                        <h3>Hangup Reasons</h3>
+                        <table class="status-table" id="hangup-table">
+                            <thead>
+                                <tr>
+                                    <th>Reason</th>
+                                    <th>Calls</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- List Breakdown Table -->
+                    <div class="table-container">
+                        <h3>List Breakdown</h3>
+                        <table class="status-table" id="list-table">
+                            <thead>
+                                <tr>
+                                    <th>List ID</th>
+                                    <th>Calls</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal for Detailed Records -->
+    <div id="details-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Network Details</h2>
+                <span class="close-btn">&times;</span>
+            </div>
+
+            <div class="modal-actions">
+                <select id="status-filter" class="status-filter">
+                    <option value="ALL">All Statuses</option>
+                    <!-- Options injected by JS -->
+                </select>
+                <button id="copy-btn" class="btn-action">
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                    </svg>
+                    Copy Numbers
+                </button>
+                <span id="copy-feedback"
+                    style="color: #10b981; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s;">Copied!</span>
+            </div>
+
+            <div class="modal-body">
+                <div id="modal-stats" class="modal-stats-container">
+                    <!-- Mini stats injected by JS -->
+                </div>
+                <table class="status-table" id="modal-table">
+                    <thead>
+                        <tr>
+                            <th>Phone Number</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Rows will be injected by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+
+</html>

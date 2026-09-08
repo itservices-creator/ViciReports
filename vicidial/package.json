@@ -1,0 +1,12 @@
+{
+  "name": "vicidial-reports-automation",
+  "version": "1.0.0",
+  "description": "Automated daily reporting interface for Vicidial sheets",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
