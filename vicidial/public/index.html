@@ -9,15 +9,15 @@
     <link rel="stylesheet" href="css/style.css">
     <!-- SheetJS for parsing Excel/CSV files -->
     <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
-            <div class="logo">
-                <div class="logo-icon"></div>
-                <h2>ViciReports</h2>
+            <div class="logo" style="display: flex; justify-content: center; padding: 10px 0;">
+                <img src="https://taager.com/dist/taager-logo-C0Fv9eeU.webp" alt="Taager Logo" style="max-width: 140px; height: auto;">
             </div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item active" data-target="iraq">
@@ -31,12 +31,27 @@
 
                 <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
                 
+                <a href="#" class="nav-item" data-target="agent">
+                    <span style="font-size: 1.2rem;">👥</span>
+                    Agent Performance
+                </a>
+                
                 <a href="#" class="nav-item" data-target="outbound">
                     <span style="font-size: 1.2rem;">📊</span>
                     Outbound Report
                 </a>
 
+                <a href="#" class="nav-item" data-target="maqsam">
+                    <span style="font-size: 1.2rem;">📞</span>
+                    Maqsam Report
+                </a>
+
                 <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 10px 0;"></div>
+                
+                <a href="#" class="nav-item" data-target="freepbx">
+                    <span style="font-size: 1.2rem;">☎️</span>
+                    FreePBX Report
+                </a>
                 
                 <a href="#" class="nav-item" data-target="options">
                     <span style="font-size: 1.2rem;">⚙️</span>
@@ -92,7 +107,7 @@
                 </div>
 
                 <!-- Network Stats Grid -->
-                <div class="network-stats-grid" id="network-stats">
+                <div class="stats-grid" id="network-stats">
                     <!-- Stat cards injected by JS -->
                 </div>
 
@@ -116,10 +131,48 @@
                 </div>
             </section>
 
+            <!-- Agent Performance Dashboard -->
+            <section class="dashboard-container" id="agent-dashboard" style="display: none;">
+                <!-- Agent Overview Cards -->
+                <div class="stats-grid" style="grid-template-columns: repeat(3, 1fr);" id="agent-kpis">
+                    <!-- KPI Cards injected by JS -->
+                </div>
+
+                <!-- Agent Data Table -->
+                <div class="details-section" style="grid-template-columns: 1fr; margin-top: 2rem;">
+                    <div class="table-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3>Agent Performance Data</h3>
+                            <input type="text" id="agent-search" placeholder="Search agent..." style="padding: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; width: 250px;">
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="status-table" id="agent-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Agent Name</th>
+                                        <th>ID</th>
+                                        <th>Calls</th>
+                                        <th>Login Time</th>
+                                        <th>Talk Time</th>
+                                        <th>Wait Time</th>
+                                        <th>Pause Time</th>
+                                        <th>Callbacks</th>
+                                        <th>Sales</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <!-- Outbound Report Dashboard -->
             <section class="dashboard-container" id="outbound-dashboard" style="display: none;">
                 <!-- Outbound Overview Cards -->
-                <div class="network-stats-grid" style="grid-template-columns: repeat(4, 1fr);" id="outbound-kpis">
+                <div class="stats-grid" style="grid-template-columns: repeat(4, 1fr);" id="outbound-kpis">
                     <!-- KPI Cards injected by JS -->
                 </div>
 
@@ -195,6 +248,81 @@
 
                 </div>
             </section>
+
+            <!-- Maqsam Report Dashboard -->
+            <section class="dashboard-container" id="maqsam-dashboard" style="display: none;">
+                <!-- Maqsam Overview Cards -->
+                <div class="stats-grid" id="maqsam-country-kpis">
+                    <!-- KPI Cards injected by JS -->
+                </div>
+
+                <!-- Agent Data Table -->
+                <div class="details-section" style="grid-template-columns: 1fr; margin-top: 2rem;">
+                    <div class="table-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3>Agent Performance by Country</h3>
+                            <input type="text" id="maqsam-agent-search" placeholder="Search agent..." style="padding: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; width: 250px;">
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="status-table" id="maqsam-agent-data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Agent Name</th>
+                                        <th>Total Calls</th>
+                                        <th>Country Breakdown</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FreePBX Report Dashboard -->
+            <section class="dashboard-container" id="freepbx-dashboard" style="display: none;">
+                <div class="stats-grid" id="freepbx-kpis">
+                    <!-- KPI Cards injected by JS -->
+                </div>
+
+                <div class="stats-grid" id="freepbx-attempts-kpis" style="margin-top: 1rem; grid-template-columns: repeat(3, 1fr);">
+                    <!-- Attempt KPIs injected by JS -->
+                </div>
+
+                <div class="details-section" style="grid-template-columns: 1fr; margin-top: 2rem;">
+                    <div class="table-container">
+                        <h3>Hourly Answer Rate Analysis</h3>
+                        <div style="height: 300px; width: 100%; position: relative;">
+                            <canvas id="freepbx-hourly-chart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="details-section" style="grid-template-columns: 1fr; margin-top: 2rem;">
+                    <div class="table-container">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h3>Customer Numbers (DST) Analysis</h3>
+                            <input type="text" id="freepbx-dst-search" placeholder="Search Number..." style="padding: 0.5rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: white; width: 250px;">
+                        </div>
+                        <div style="overflow-x: auto;">
+                            <table class="status-table" id="freepbx-dst-table">
+                                <thead>
+                                    <tr>
+                                        <th>Target Number (DST)</th>
+                                        <th>Total Calls Attempts</th>
+                                        <th>Unique Sources (SRC)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <!-- Rows injected by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     </div>
 
@@ -241,6 +369,121 @@
         </div>
     </div>
 
+    <!-- Maqsam Agent Details Modal -->
+    <div id="maqsam-agent-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 id="maqsam-modal-title">Agent Details</h2>
+                <span class="close-btn maqsam-close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="maqsam-modal-stats" class="modal-stats-container">
+                    <!-- Agent summary stats -->
+                </div>
+                <div class="table-container" style="margin-top: 20px;">
+                    <table class="status-table" id="maqsam-modal-table">
+                        <thead>
+                            <tr>
+                                <th>Country</th>
+                                <th>Total Calls</th>
+                                <th>Answered</th>
+                                <th>Unanswered</th>
+                                <th>Answered Duration (Min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Maqsam Country Calls Modal -->
+    <div id="maqsam-country-calls-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px; z-index: 1001;">
+            <div class="modal-header">
+                <h2 id="maqsam-country-calls-title">Country Calls Details</h2>
+                <span class="close-btn maqsam-country-calls-close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="table-container" style="margin-top: 20px;">
+                    <table class="status-table" id="maqsam-country-calls-table">
+                        <thead>
+                            <tr>
+                                <th>Target Number (Callee)</th>
+                                <th>Source Number (Caller)</th>
+                                <th>Status</th>
+                                <th>Duration (Min)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FreePBX DST Calls Modal -->
+    <div id="freepbx-details-modal" class="modal">
+        <div class="modal-content" style="max-width: 1000px;">
+            <div class="modal-header">
+                <h2 id="freepbx-modal-title">Calls Details</h2>
+                <span class="close-btn freepbx-close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="table-container" style="margin-top: 20px;">
+                    <table class="status-table" id="freepbx-modal-table">
+                        <thead>
+                            <tr>
+                                <th>Call Date</th>
+                                <th>Source (SRC)</th>
+                                <th>Campaign</th>
+                                <th>Server (IP)</th>
+                                <th>Duration (Sec)</th>
+                                <th>Disposition</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- FreePBX SRC Stats Modal -->
+    <div id="freepbx-src-modal" class="modal">
+        <div class="modal-content" style="max-width: 800px; z-index: 1002;">
+            <div class="modal-header">
+                <h2 id="freepbx-src-title">Source Numbers (SRC) Performance</h2>
+                <span class="close-btn freepbx-src-close-btn">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="table-container" style="margin-top: 20px;">
+                    <table class="status-table" id="freepbx-src-table">
+                        <thead>
+                            <tr>
+                                <th>Source Number (SRC)</th>
+                                <th>Total Calls</th>
+                                <th>Answered Calls</th>
+                                <th>Answer Rate (%)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Rows injected by JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/countryCodes.js"></script>
     <script src="js/script.js"></script>
 </body>
 
